@@ -53,6 +53,12 @@
   max-width: 60px;
 }
 
+.cell-input-read-only {
+  max-width: 60px;
+  background-color: dimgrey;
+  color: linen;
+}
+
 .fixed-width-cell {
   width: 140px;
 }
@@ -68,4 +74,8 @@
 
 .custom-name-input {
   margin-bottom: 5px;
+}
+
+.children-centered-horizontally {
+  justify-content: center;
 }

@@ -21,6 +21,7 @@ const insertAt = (array: any[], index: number, ...elementsArray: any[]) => {
 };
 
 function App() {
+  //todo: tot, % e Sigma sicuramente devono essere campi read-only autosettati.
   const [firstTableCols] = useState(['TAV', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'TOT', 'Σ']);
   const [secondTableCols] = useState(['TAV', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'TOT', '%']);
   const [firstTableRows, setFirstTableRows] = useState<RowType[]>([
@@ -94,11 +95,19 @@ function App() {
     updateFunc(updatedRows);
   }, [firstTableRows, secondTableRows]);
 
-  const getTDs = useCallback((amount: number, row: RowType) => {
+  const getTDs = useCallback((amount: number, row: RowType, columns: string[]) => {
     const result = [];
     const differential = row.hasSigma ? 0 : 1;
     for (let i = 0; i < amount - differential; i++) {
-      result.push(<td key={row.label + '-' + i}><input type="number" id={row.id} min={0} defaultValue={0} className="cell-input" onChange={event => onChangeInput(row.id, event)}></input></td>);
+      const currentCol = columns[i + 1];
+      const readOnly = currentCol === '%' || currentCol === 'TOT' || currentCol === 'Σ';
+      result.push(
+        <td key={row.label + '-' + i}>
+          <div className="input-group children-centered-horizontally">
+            <input disabled={readOnly} type="number" id={row.id} min={0} defaultValue={0} className={readOnly ? "form-control cell-input-read-only" : "form-control cell-input"} onChange={event => onChangeInput(row.id, event)} aria-label="numero" />
+          </div>
+        </td>
+      );
     }
     result.push();
     return result;
@@ -136,20 +145,37 @@ function App() {
   const getExtraRowButton = useCallback((row: RowType) => {
     let extraRowBtn;
     if (row.label === 'Ad') {
-      extraRowBtn = (<tr><td><input type="text" id={'custom-input'} value={customInputName} className="custom-name-input" onChange={event => onChangeCustomInputName(event)}></input><Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomInput()}>Aggiungi Riga Custom<i className="fa-solid fa-plus"></i></Button></td></tr>);
+      extraRowBtn = (
+        <tr>
+          <td>
+            <div className="input-group children-centered-horizontally">
+              <input type="text" id={'custom-input'} value={customInputName} className="form-control custom-name-input" onChange={event => onChangeCustomInputName(event)} />
+            </div>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomInput()}>
+              Aggiungi Riga Custom <i className="pl-2 fa-solid fa-plus"></i>
+            </Button>
+          </td>
+        </tr>
+      );
     } else {
-      extraRowBtn = (<tr><td><Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => addRow(row)}>Aggiungi Riga <i className="fa-solid fa-plus"></i></Button></td></tr>);
+      extraRowBtn = (
+        <tr>
+          <td>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => addRow(row)}>Aggiungi Riga <i className="fa-solid fa-plus"></i></Button>
+          </td>
+        </tr>
+      );
     }
     return row.canAddRow ? extraRowBtn : '';
   }, [addRow, onChangeCustomInputName, onCreateCustomInput]);
 
-  const getTableRows = useCallback((rows: RowType[]) => {
+  const getTableRows = useCallback((rows: RowType[], cols: string[]) => {
     const result = rows.map((row, index) => {
       return (
         <React.Fragment key={row + '-' + index}>
           <tr key={row + '-' + index}>
             <th key='firstCell' className='fixed-width-cell'>{row.label}</th>
-            {getTDs(firstTableCols.length - 1, row)}
+            {getTDs(firstTableCols.length - 1, row, cols)}
           </tr>
           {!!row.canAddRow && getExtraRowButton(row)}
         </React.Fragment>
@@ -175,9 +201,9 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {getTableRows(firstTableRows.filter(el => el.section === 0))}
-            {getTableRows(firstTableRows.filter(el => el.section === 1))}
-            {getTableRows(firstTableRows.filter(el => el.section === 2))}
+            {getTableRows(firstTableRows.filter(el => el.section === 0), firstTableCols)}
+            {getTableRows(firstTableRows.filter(el => el.section === 1), firstTableCols)}
+            {getTableRows(firstTableRows.filter(el => el.section === 2), firstTableCols)}
           </tbody>
         </Table>
         <Table striped bordered id="second-table">
@@ -187,14 +213,14 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {getTableRows(secondTableRows.filter(el => el.section === 0))}
-            {getTableRows(secondTableRows.filter(el => el.section === 1))}
-            {getTableRows(secondTableRows.filter(el => el.section === 2))}
+            {getTableRows(secondTableRows.filter(el => el.section === 0), secondTableCols)}
+            {getTableRows(secondTableRows.filter(el => el.section === 1), secondTableCols)}
+            {getTableRows(secondTableRows.filter(el => el.section === 2), secondTableCols)}
           </tbody>
         </Table>
       </div>
       <div className='w-100'>
-        <Button className="submit-btn" size="lg" variant="primary" onClick={calculateResults}> Ottieni Risultati <i className="fa-solid fa-right-to-bracket"></i></Button>
+        <Button className="submit-btn" size="lg" variant="success" onClick={calculateResults}> Ottieni Risultati <i className="pl-2 fa-solid fa-right-to-bracket"></i></Button>
       </div>
     </div>
   );
