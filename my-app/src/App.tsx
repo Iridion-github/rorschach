@@ -69,6 +69,53 @@ function App() {
     { id: '38', label: 'FENOMENI SPECIALI', hasSigma: true, originalIndex: 38, section: 2 },
   ]);
 
+  const possibleExtraFields = [
+    { label: 'MC', value: 1 },
+    { label: 'MC’b', value: 1 },
+    { label: 'MClob', value: 1 },
+    { label: 'M(C)', value: 1 },
+    { label: 'ClobC', value: 0.5 },
+    { label: 'CClob', value: 0.5 },
+    { label: 'ClobC’b', value: 0.5 },
+    { label: 'C’bClob', value: 0.5 },
+    { label: 'C’bClob-', value: 0 },
+    { label: 'FCC’b', value: 1 },
+    { label: 'CFC’b', value: 0.5 },
+    { label: 'CC’b', value: 0 },
+    { label: 'Clob(C)', value: 0.5 },
+    { label: '(C)Clob', value: 0 },
+    { label: 'F(C)C', value: 0.5 },
+    { label: 'CF(C)', value: 0.5 },
+    { label: 'F(C)C’b', value: 0.5 },
+    { label: 'C’bF(C)', value: 0.5 },
+    { label: 'MClobC', value: 1 },
+    { label: 'MClobC’b', value: 1 },
+    { label: 'MClob(C)', value: 1 },
+    { label: 'MClob(C)C', value: 1 },
+  ];
+
+  const getOptions = useCallback((extraFields: any[]) => {
+    function compare(a: any, b: any) {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    }
+    return extraFields.sort(compare).map(field => {
+      return (
+        <option key={field.label} value={JSON.stringify(field)}>{field.label}</option>
+      );
+    });
+  }, []);
+
+  const onSelectOptions = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+    const data = JSON.parse(event.target.value);
+    setCustomNameInput(data.label);
+  }, []);
+
   const dynamicTableHeaders1 = useMemo(() => {
     return firstTableCols.map((col, index) =>
       <th key={col + '-' + index}>{col}</th>
@@ -149,7 +196,9 @@ function App() {
         <tr>
           <td>
             <div className="input-group children-centered-horizontally">
-              <input type="text" id={'custom-input'} value={customInputName} className="form-control custom-name-input" onChange={event => onChangeCustomInputName(event)} />
+              <select className="form-select" aria-label="Seleziona l'etichetta" onChange={onSelectOptions}>
+                {getOptions(possibleExtraFields)}
+              </select>
             </div>
             <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomInput()}>
               Aggiungi Riga Custom <i className="pl-2 fa-solid fa-plus"></i>
