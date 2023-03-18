@@ -9,9 +9,9 @@ import React from 'react';
 interface RowType {
   id: string;
   label: string;
-  originalIndex: number;
-  section: number;
-  value?: number;
+  section?: number;
+  power?: number;
+  instances: number[];
   hasSigma?: boolean;
   canAddRow?: boolean;
 }
@@ -20,79 +20,142 @@ const insertAt = (array: any[], index: number, ...elementsArray: any[]) => {
   array.splice(index, 0, ...elementsArray);
 };
 
+const getInitialInstances = (colsNum: number): number[] => {
+  const result = Array.from({ length: colsNum }, (_foo) => 0);
+  return result;
+};
+
+const getPercentage = (partialValue: number, totalValue: number): number => {
+  if (totalValue < 1) return 0;
+  const result = (100 * partialValue) / totalValue;
+  if (result.toString().split('.')[1].length > 2) {
+    return Number(result.toFixed(2));
+  } else {
+    return Number(result);
+  }
+};
+
 function App() {
   //todo: tot, % e Sigma sicuramente devono essere campi read-only autosettati.
   const [firstTableCols] = useState(['TAV', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'TOT', 'Σ']);
   const [secondTableCols] = useState(['TAV', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'TOT', '%']);
-  const [firstTableRows, setFirstTableRows] = useState<RowType[]>([
-    { id: '0', label: 'T.L.', originalIndex: 0, section: 0 },
-    { id: '1', label: 'T.T.', originalIndex: 1, section: 0 },
-    { id: '2', label: 'R', originalIndex: 2, section: 0 },
-    { id: '3', label: 'R+', originalIndex: 3, section: 0 },
-    { id: '4', label: 'G', originalIndex: 4, hasSigma: true, canAddRow: true, section: 1 },
-    { id: '5', label: 'D', originalIndex: 5, hasSigma: true, canAddRow: true, section: 1 },
-    { id: '6', label: 'Dim', originalIndex: 6, hasSigma: true, canAddRow: true, section: 1 },
-    { id: '7', label: 'Dd', originalIndex: 7, hasSigma: true, canAddRow: true, section: 1 },
-    { id: '8', label: 'Di', originalIndex: 8, hasSigma: true, section: 1 },
-    { id: '9', label: 'Dr', originalIndex: 9, hasSigma: true, section: 1 },
-    { id: '10', label: 'TOT', originalIndex: 10, hasSigma: true, section: 1 },
-    { id: '11', label: 'F+', originalIndex: 11, hasSigma: true, section: 2 },
-    { id: '12', label: 'F±', originalIndex: 12, hasSigma: true, section: 2 },
-    { id: '13', label: 'F-', originalIndex: 13, hasSigma: true, section: 2 },
-    { id: '14', label: 'M', originalIndex: 14, section: 2 },
-    { id: '15', label: 'FC', originalIndex: 15, section: 2 },
-    { id: '16', label: 'CF', originalIndex: 16, section: 2 },
-    { id: '17', label: 'C', originalIndex: 17, canAddRow: true, section: 2 },
-    { id: '18', label: 'CLOB*', originalIndex: 18, canAddRow: true, section: 2 },
-    { id: '19', label: 'TOT.', originalIndex: 19, section: 2 },
-  ]);
 
-  const [secondTableRows, setSecondTableRows] = useState<RowType[]>([
-    { id: '20', label: 'MA', originalIndex: 20, section: 0 },
-    { id: '21', label: 'mi', originalIndex: 21, section: 0 },
-    { id: '22', label: 'PM | M’P’', originalIndex: 22, section: 0 },
-    { id: '23', label: 'Ef', originalIndex: 23, section: 0 },
-    { id: '24', label: 'Mr', originalIndex: 24, section: 0 },
-    { id: '25', label: 'Fc | cF | c', originalIndex: 25, section: 0 },
-    { id: '26', label: 'FC’n | C’nF | C’n', originalIndex: 26, section: 0 },
-    { id: '27', label: 'F(c)+ | F(c)-', originalIndex: 27, section: 0 },
-    { id: '28', label: 'V', hasSigma: true, originalIndex: 28, section: 1 },
-    { id: '29', label: 'O', hasSigma: true, originalIndex: 29, section: 1 },
-    { id: '30', label: 'O+', hasSigma: true, originalIndex: 30, section: 1 },
-    { id: '31', label: 'O-', hasSigma: true, originalIndex: 31, section: 1 },
-    { id: '32', label: 'H', hasSigma: true, originalIndex: 32, section: 1 },
-    { id: '33', label: 'Hd', hasSigma: true, originalIndex: 33, section: 1 },
-    { id: '34', label: 'A', hasSigma: true, originalIndex: 34, section: 1 },
-    { id: '35', label: 'Ad', hasSigma: true, canAddRow: true, originalIndex: 35, section: 1 },
-    { id: '36', label: 'TOT.', hasSigma: true, originalIndex: 36, section: 2 },
-    { id: '37', label: 'CHOC', hasSigma: true, originalIndex: 37, section: 2 },
-    { id: '38', label: 'FENOMENI SPECIALI', hasSigma: true, originalIndex: 38, section: 2 },
-  ]);
+  const firstTableRowsInitialValue = useMemo(() => [
+    { id: '0', label: 'T.L.', section: 0, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '1', label: 'T.T.', section: 0, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '2', label: 'R', section: 0, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '3', label: 'R+', section: 0, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '4', label: 'G', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '5', label: 'D', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '6', label: 'Dim', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '7', label: 'Dd', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '8', label: 'Di', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '9', label: 'Dr', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '10', label: 'TOT', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '11', label: 'F+', hasSigma: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '12', label: 'F±', hasSigma: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '13', label: 'F-', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '14', label: 'M', section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '15', label: 'FC', section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '15.1', label: 'FC’b', section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '15.2', label: 'c’bF', section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '15.3', label: 'C’b', section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '16', label: 'CF', section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '17', label: 'C', canAddRow: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '18', label: 'CLOB*', canAddRow: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '19', label: 'TOT.', section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [firstTableRows, setFirstTableRows] = useState<RowType[]>(firstTableRowsInitialValue);
 
-  const possibleExtraFields = [
-    { label: 'MC', value: 1 },
-    { label: 'MC’b', value: 1 },
-    { label: 'MClob', value: 1 },
-    { label: 'M(C)', value: 1 },
-    { label: 'ClobC', value: 0.5 },
-    { label: 'CClob', value: 0.5 },
-    { label: 'ClobC’b', value: 0.5 },
-    { label: 'C’bClob', value: 0.5 },
-    { label: 'C’bClob-', value: 0 },
-    { label: 'FCC’b', value: 1 },
-    { label: 'CFC’b', value: 0.5 },
-    { label: 'CC’b', value: 0 },
-    { label: 'Clob(C)', value: 0.5 },
-    { label: '(C)Clob', value: 0 },
-    { label: 'F(C)C', value: 0.5 },
-    { label: 'CF(C)', value: 0.5 },
-    { label: 'F(C)C’b', value: 0.5 },
-    { label: 'C’bF(C)', value: 0.5 },
-    { label: 'MClobC', value: 1 },
-    { label: 'MClobC’b', value: 1 },
-    { label: 'MClob(C)', value: 1 },
-    { label: 'MClob(C)C', value: 1 },
-  ];
+  const secondTableRowsInitialValue = useMemo(() => [
+    { id: '20', label: 'MA', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '21', label: 'mi', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '22', label: 'PM | M’P’', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '23', label: 'Ef', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '24', label: 'Mr', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '25', label: 'Fc | cF | c', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '26.1', label: 'FC’n+', section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '26.2', label: 'C’nF+-', section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '26.3', label: 'C’n-', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '27.1', label: 'F(C)+', section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '27.2', label: 'F(C)+-', section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '27.3', label: 'F(C)-', section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '28', label: 'V', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '28', label: '(V)', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '28', label: 'Sommatoria V', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '29', label: 'O', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '30', label: 'O+', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '30.1', label: 'O+-', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '31', label: 'O-', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '31.1', label: '(O)', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '31.1', label: '(O)+', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '31.1', label: '(O)+-', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '31.1', label: '(O)-', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '32', label: 'H', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '33', label: 'Hd', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '34', label: 'A', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35', label: 'Ad', hasSigma: true, canAddRow: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.1', label: 'Abstr', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.2', label: 'Anat', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.3', label: 'Arald', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.4', label: 'Ark', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.5', label: 'Astr', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '36', label: 'TOT.', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '37', label: 'CHOC', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '38', label: 'FENOMENI SPECIALI', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(secondTableCols.length) },
+  ], [secondTableCols.length]);
+  const [secondTableRows, setSecondTableRows] = useState<RowType[]>(secondTableRowsInitialValue);
+
+  const possibleExtraFieldsInitialValue = useMemo(() => [
+    { id: 'extra0', label: 'FClob', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra1', label: 'ClobF', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra2', label: 'Clob', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra3', label: 'Cloob', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra4', label: 'FC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra5', label: 'C’bF', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra6', label: 'C’b', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra7', label: 'F/C', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra8', label: 'C/F', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra9', label: 'MC', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra10', label: 'MC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra11', label: 'MClob', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra12', label: 'M(C)', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra13', label: 'ClobC', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra14', label: 'CClob', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra15', label: 'ClobC’b', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra16', label: 'C’bClob', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra17', label: 'C’bClob-', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra18', label: 'FCC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra19', label: 'CFC’b', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra20', label: 'CC’b', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra21', label: 'Clob(C)', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra22', label: '(C)Clob', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra23', label: 'F(C)C', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra24', label: 'CF(C)', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra25', label: 'F(C)C’b', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra26', label: 'C’bF(C)', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra27', label: 'MClobC', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra28', label: 'MClobC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra29', label: 'MClob(C)', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra30', label: 'MClob(C)C', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra31', label: 'MA↑', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra32', label: 'MA↓', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra33', label: 'mi↑', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra34', label: 'mi↓', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra35', label: 'pM', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra36', label: 'M’p’', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra37', label: 'Mr', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra38', label: 'Ef↑', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra39', label: 'Ef↓', power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra40', label: 'Fc+', power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra41', label: 'cF+-', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: 'extra42', label: 'c-', power: 0, instances: getInitialInstances(secondTableCols.length) },
+  ], [secondTableCols.length]);
+  const [possibleExtraFields, setPossibleExtraFields] = useState<RowType[]>(possibleExtraFieldsInitialValue);
+
+  const [gotResults, setGotResults] = useState(false);
+  const [amountOfResponses, setAmountOfResponses] = useState(0);
+  const [resultingPercentage, setResultingPercentage] = useState(0);
 
   const getOptions = useCallback((extraFields: any[]) => {
     function compare(a: any, b: any) {
@@ -128,13 +191,20 @@ function App() {
     );
   }, [secondTableCols]);
 
-  const onChangeInput = useCallback((id: string, event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeInput = useCallback((id: string, event: ChangeEvent<HTMLInputElement>, index: number) => {
     const isInFirstTable = firstTableRows.find(el => el.id === id);
     const targetArr = isInFirstTable ? firstTableRows : secondTableRows;
     const updateFunc = isInFirstTable ? setFirstTableRows : setSecondTableRows;
     const updatedRows = [...targetArr].map(el => {
       if (el.id === id) {
-        return { ...el, value: Number(event.target.value) };
+        const updatedInstances = el.instances.map((instance, i) => {
+          if (i !== index) {
+            return instance;
+          } else {
+            return Number(event.target.value);
+          }
+        });
+        return { ...el, instances: updatedInstances };
       } else {
         return el;
       }
@@ -151,7 +221,7 @@ function App() {
       result.push(
         <td key={row.label + '-' + i}>
           <div className="input-group children-centered-horizontally">
-            <input disabled={readOnly} type="number" id={row.id} min={0} defaultValue={0} className={readOnly ? "form-control cell-input-read-only" : "form-control cell-input"} onChange={event => onChangeInput(row.id, event)} aria-label="numero" />
+            <input disabled={readOnly} type="number" id={row.id} min={0} defaultValue={0} className={readOnly ? "form-control cell-input-read-only" : "form-control cell-input"} onChange={event => onChangeInput(row.id, event, i)} aria-label="numero" />
           </div>
         </td>
       );
@@ -161,10 +231,10 @@ function App() {
   }, [onChangeInput]);
 
   const addRow = useCallback((row: RowType) => {
-    const isInFirstTable = firstTableRows.find(el => el.originalIndex === row.originalIndex);
+    const isInFirstTable = firstTableRows.find(el => el.label === row.label);
     const targetArr = isInFirstTable ? firstTableRows : secondTableRows;
     const updateFunc = isInFirstTable ? setFirstTableRows : setSecondTableRows;
-    const targetIndex = targetArr.findIndex(el => el.originalIndex === row.originalIndex);
+    const targetIndex = targetArr.findIndex(el => el.label === row.label);
     const newRow = { ...row, canAddRow: false, id: Date.now().toString() };
     const updatedRows = [...targetArr];
     insertAt(updatedRows, targetIndex, newRow);
@@ -172,10 +242,6 @@ function App() {
   }, [firstTableRows, secondTableRows]);
 
   const [customInputName, setCustomNameInput] = useState('');
-
-  const onChangeCustomInputName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setCustomNameInput(event.target.value);
-  }, []);
 
   const onCreateCustomInput = useCallback(() => {
     const prevRow = secondTableRows.find(el => el.label === 'Ad');
@@ -216,7 +282,7 @@ function App() {
       );
     }
     return row.canAddRow ? extraRowBtn : '';
-  }, [addRow, onChangeCustomInputName, onCreateCustomInput]);
+  }, [addRow, onCreateCustomInput, getOptions, onSelectOptions, possibleExtraFields]);
 
   const getTableRows = useCallback((rows: RowType[], cols: string[]) => {
     const result = rows.map((row, index) => {
@@ -234,10 +300,33 @@ function App() {
     return result;
   }, [firstTableCols.length, getExtraRowButton, getTDs]);
 
+
+
   const calculateResults = useCallback(() => {
     const fusedTablesRows = [...firstTableRows, ...secondTableRows];
-    console.log('calculating based on this data:', fusedTablesRows);
+    const fusedTableRowsFilledCellsOnly = fusedTablesRows.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
+    const rowsWithTotal = fusedTableRowsFilledCellsOnly.map(row => ({ ...row, total: row.instances.reduce((partialSum, a) => partialSum + a, 0) * (row.power ?? 0) }));
+    const amountOfResponsesVal = fusedTableRowsFilledCellsOnly.map(row => row.instances.reduce((partialSum, a) => partialSum + a, 0)).reduce((partialSum, a) => partialSum + a, 0);
+    console.log('calculating based on this data:', fusedTableRowsFilledCellsOnly);
+    console.log('rowsWithTotal:', rowsWithTotal);
+    const totalPower = rowsWithTotal.map(row => row.total).reduce((partialSum, a) => partialSum + a, 0);
+    console.log('totalPower:', totalPower);
+    console.log('amountOfResponses:', amountOfResponsesVal);
+    const calculatedPercentage = getPercentage(totalPower, amountOfResponsesVal);
+    console.log('>>>>> calculatedPercentage:', calculatedPercentage);
+    setAmountOfResponses(amountOfResponsesVal);
+    setResultingPercentage(calculatedPercentage);
+    setGotResults(true);
   }, [firstTableRows, secondTableRows]);
+
+  const resetAll = useCallback(() => {
+    setGotResults(false);
+    setAmountOfResponses(0);
+    setResultingPercentage(0);
+    setFirstTableRows(firstTableRowsInitialValue);
+    setSecondTableRows(secondTableRowsInitialValue);
+    setPossibleExtraFields(possibleExtraFieldsInitialValue);
+  }, [firstTableRowsInitialValue, possibleExtraFieldsInitialValue, secondTableRowsInitialValue]);
 
   return (
     <div className="App">
@@ -270,8 +359,17 @@ function App() {
       </div>
       <div className='w-100'>
         <Button className="submit-btn" size="lg" variant="success" onClick={calculateResults}> Ottieni Risultati <i className="pl-2 fa-solid fa-right-to-bracket"></i></Button>
+        <Button className="reset-btn" size="lg" variant="danger" onClick={resetAll}> Reset</Button>
       </div>
-    </div>
+      {
+        gotResults && (
+          <div className='tables-container'>
+            <h4>Numero di Risposte: {amountOfResponses}</h4>
+            <h4>Percentuale: {resultingPercentage} %</h4>
+          </div>
+        )
+      }
+    </div >
   );
 }
 

@@ -79,3 +79,11 @@
 .children-centered-horizontally {
   justify-content: center;
 }
+
+.submit-btn {
+  margin-right: 5px;
+}
+
+.reset-btn {
+  margin-left: 5px;
+}
