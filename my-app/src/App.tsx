@@ -218,17 +218,40 @@ function App() {
     for (let i = 0; i < amount - differential; i++) {
       const currentCol = columns[i + 1];
       const readOnly = currentCol === '%' || currentCol === 'TOT' || currentCol === 'Σ';
+      // todo: iridion - per ora la logica che segue considera che TOT rappresenti il numero di risposte, e Sigma rappresenti il power totale della row
+      let updatingValue = undefined;
+      if (currentCol === 'TOT') {
+        const isInFirstTable = firstTableRows.find(el => el.id === row.id);
+        const target = isInFirstTable ? firstTableRows.find(r => r.id === row.id) : secondTableRows.find(r => r.id === row.id);
+        const sumOfInstances = target?.instances.reduce((partialSum, a) => partialSum + a, 0);
+        updatingValue = sumOfInstances;
+      }
+      if (currentCol === 'Σ') {
+        const isInFirstTable = firstTableRows.find(el => el.id === row.id);
+        const target = isInFirstTable ? firstTableRows.find(r => r.id === row.id) : secondTableRows.find(r => r.id === row.id);
+        const rowPower = target ? target.instances.reduce((partialSum, a) => partialSum + a, 0) * (row.power ?? 0) : 0;
+        updatingValue = rowPower;
+      }
       result.push(
         <td key={row.label + '-' + i}>
           <div className="input-group children-centered-horizontally">
-            <input disabled={readOnly} type="number" id={row.id} min={0} defaultValue={0} className={readOnly ? "form-control cell-input-read-only" : "form-control cell-input"} onChange={event => onChangeInput(row.id, event, i)} aria-label="numero" />
+            <input
+              disabled={readOnly}
+              type="number"
+              id={row.id} min={0}
+              defaultValue={readOnly ? undefined : 0}
+              value={updatingValue}
+              className={readOnly ? "form-control cell-input-read-only" : "form-control cell-input"}
+              onChange={event => onChangeInput(row.id, event, i)}
+              aria-label="numero"
+            />
           </div>
         </td>
       );
     }
     result.push();
     return result;
-  }, [onChangeInput]);
+  }, [onChangeInput, firstTableRows, secondTableRows]);
 
   const addRow = useCallback((row: RowType) => {
     const isInFirstTable = firstTableRows.find(el => el.label === row.label);
