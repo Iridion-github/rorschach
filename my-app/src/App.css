@@ -96,3 +96,13 @@
 .delete-row-btn {
   margin-right: 10px;
 }
+
+.sticky-table-headers {
+  position: sticky;
+  top: 0;
+  margin-top: -1px;
+  background-color: white;
+  border-radius: 2px;
+  border: 1px solid rgb(196, 195, 195);
+  z-index: 10;
+}

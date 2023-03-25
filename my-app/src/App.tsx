@@ -392,7 +392,7 @@ function App() {
       <h1>Calcolo risultati test di Rorschach </h1>
       <div className='tables-container'>
         <Table striped bordered id="first-table">
-          <thead>
+          <thead className='sticky-table-headers'>
             <tr>
               {dynamicTableHeaders1}
             </tr>
@@ -407,7 +407,7 @@ function App() {
           </tbody>
         </Table>
         <Table striped bordered id="second-table">
-          <thead>
+          <thead className='sticky-table-headers'>
             <tr>
               {dynamicTableHeaders2}
             </tr>
