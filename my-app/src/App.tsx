@@ -14,6 +14,7 @@ interface RowType {
   instances: number[];
   hasSigma?: boolean;
   canAddRow?: boolean;
+  canAddCustomRow?: boolean;
   canDelete?: boolean;
 }
 
@@ -41,65 +42,90 @@ function App() {
   const [secondTableCols] = useState(['TAV', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Numero Risposte', 'Punti']);
 
   const firstTableRowsInitialValue = useMemo(() => [
+    //prima sezione
     { id: '0', label: 'T.L.', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '1', label: 'T.T.', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '2', label: 'R', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '3', label: 'R+', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    //sezione da G a Dr
     { id: '4.1', label: 'G+', hasSigma: true, canAddRow: true, section: 1, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '4.2', label: 'G+-', hasSigma: true, canAddRow: true, section: 1, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
     { id: '4.3', label: 'G-', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '5', label: 'D', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '6', label: 'Dim', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '5.1', label: 'D+', hasSigma: true, canAddRow: true, section: 1, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '5.2', label: 'D+-', hasSigma: true, canAddRow: true, section: 1, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '5.3', label: 'D-', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '6.1', label: 'Dim+', hasSigma: true, canAddRow: true, section: 1, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '6.1', label: 'Dim+-', hasSigma: true, canAddRow: true, section: 1, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '6.1', label: 'Dim', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '7', label: 'Dd', hasSigma: true, canAddRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '8', label: 'Di', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '9', label: 'Dr', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '8', label: 'Di+', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '8', label: 'Di+-', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '8', label: 'Di-', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '9', label: 'Dr+', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '9', label: 'Dr+-', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '9', label: 'Dr-', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    //sezione da F a Clob
     { id: '11', label: 'F+', hasSigma: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '12', label: 'F±', hasSigma: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
     { id: '13', label: 'F-', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '14', label: 'M', hasSigma: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '15', label: 'FC', hasSigma: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '15.1', label: 'FC’b', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '15.2', label: 'c’bF', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '15.3', label: 'C’b', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '16', label: 'CF', hasSigma: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
-    { id: '17', label: 'C', hasSigma: true, canAddRow: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '18', label: 'CLOB*', hasSigma: true, canAddRow: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '14.1', label: 'M↑', hasSigma: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '14.2', label: 'M@', hasSigma: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '14.2', label: 'M↓', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '15.1', label: 'FC', hasSigma: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '15.2', label: 'CF', hasSigma: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '15.3', label: 'C', hasSigma: true, canAddRow: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '16.1', label: 'FC’b', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '16.2', label: 'c’bF', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '16.3', label: 'C’b', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '18.1', label: 'FClob', hasSigma: true, canAddRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '18.2', label: 'ClobF', hasSigma: true, canAddRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '18.3', label: 'Clob', hasSigma: true, canAddRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
   ], [firstTableCols.length]);
   const [firstTableRows, setFirstTableRows] = useState<RowType[]>(firstTableRowsInitialValue);
 
   const secondTableRowsInitialValue = useMemo(() => [
-    { id: '20', label: 'MA', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '21', label: 'mi', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '22', label: 'PM | M’P’', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '23', label: 'Ef', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    //prima sezione
+    { id: '20.1', label: 'MA↑', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '20.2', label: 'MA@', hasSigma: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '20.3', label: 'MA↓', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '21.1', label: 'mi↑', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '21.2', label: 'mi@', hasSigma: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '21.3', label: 'mi↓', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '23.1', label: 'Ef↑', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '23.2', label: 'Ef@', hasSigma: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '23.3', label: 'Ef↓', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
     { id: '24', label: 'Mr', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '25', label: 'Fc | cF | c', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '26.1', label: 'FC’n+', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '26.2', label: 'C’nF+-', hasSigma: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: '26.3', label: 'C’n-', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '27.1', label: 'F(C)+', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '25.1', label: 'Fc', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '25.2', label: 'cF', hasSigma: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '25.3', label: 'c', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '26.1', label: 'FC’n', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '26.2', label: 'C’nF', hasSigma: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '26.3', label: 'C’n', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '27.1', label: 'F(C)', hasSigma: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '27.2', label: 'F(C)+-', hasSigma: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
     { id: '27.3', label: 'F(C)-', hasSigma: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '28', label: 'V', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: '28', label: '(V)', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: '28', label: 'Sommatoria V', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: '29', label: 'O', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    //seconda sezione
+    { id: '28.1', label: 'V', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '28.2', label: '(V)', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    //le sommatorie in generale o sono da integrare come sistema a parte, o sono da rimuovere e potrei mettere una sezione dedicata nei risultati
+    { id: '28.3', label: 'Sommatoria V', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '29', label: 'Sommatoria O', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '30', label: 'O+', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '30.1', label: 'O+-', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
     { id: '31', label: 'O-', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '31.1', label: '(O)', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '31.1', label: '(O)+', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '31.1', label: '(O)+-', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: '31.1', label: '(O)-', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '31.2', label: '(O)+-', hasSigma: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '31.3', label: '(O)-', hasSigma: true, section: 1, power: 0, instances: getInitialInstances(secondTableCols.length) },
     { id: '32', label: 'H', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '33', label: 'Hd', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '34', label: 'A', hasSigma: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '35', label: 'Ad', hasSigma: true, canAddRow: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '35.1', label: 'Abstr', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.1', label: 'OBJ', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '35.2', label: 'Anat', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '35.3', label: 'Arald', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '35.4', label: 'Ark', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '35.5', label: 'Astr', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.3', label: 'Nat', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.4', label: 'Arch', hasSigma: true, canAddRow: false, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.5', label: 'Simb', hasSigma: true, canAddRow: true, canAddCustomRow: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    //sezione finale
     { id: '37', label: 'CHOC', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(secondTableCols.length) },
     { id: '38', label: 'FENOMENI SPECIALI', hasSigma: true, section: 2, power: 0, instances: getInitialInstances(secondTableCols.length) },
   ], [secondTableCols.length]);
@@ -278,7 +304,7 @@ function App() {
 
   const getExtraRowButton = useCallback((row: RowType) => {
     let extraRowBtn;
-    if (row.label === 'Ad') {
+    if (row.canAddCustomRow) {
       extraRowBtn = (
         <tr>
           <td>
@@ -375,6 +401,7 @@ function App() {
             {getTableRows(firstTableRows.filter(el => el.section === 1), firstTableCols)}
             <tr key='divider2' className="table-divider"></tr>
             {getTableRows(firstTableRows.filter(el => el.section === 2), firstTableCols)}
+            <tr key='divider3' className="table-divider"></tr>
           </tbody>
         </Table>
         <Table striped bordered id="second-table">
@@ -385,8 +412,11 @@ function App() {
           </thead>
           <tbody>
             {getTableRows(secondTableRows.filter(el => el.section === 0), secondTableCols)}
+            <tr key='divider1' className="table-divider"></tr>
             {getTableRows(secondTableRows.filter(el => el.section === 1), secondTableCols)}
+            <tr key='divider2' className="table-divider"></tr>
             {getTableRows(secondTableRows.filter(el => el.section === 2), secondTableCols)}
+            <tr key='divider3' className="table-divider"></tr>
           </tbody>
         </Table>
       </div>
