@@ -346,9 +346,11 @@ function App() {
     const result = rows.map((row, index) => {
       return (
         <React.Fragment key={row + '-' + index}>
-          {row.canDelete && <Button className="delete-row-btn" size="sm" variant="danger" onClick={() => deleteRow(row.id)}><i className="fa-solid fa-trash-can"></i></Button>}
           <tr key={row + '-' + index}>
-            <th key='firstCell' className='fixed-width-cell'>{row.label}</th>
+            <th key='firstCell' className='fixed-width-cell'>
+              {row.canDelete && <Button className="delete-row-btn" size="sm" variant="danger" onClick={() => deleteRow(row.id)}><i className="fa-solid fa-trash-can"></i></Button>}
+              {row.label}
+            </th>
             {getTDs(firstTableCols.length - 1, row, cols)}
           </tr>
           {!!row.canAddRow && getExtraRowButton(row)}
