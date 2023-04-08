@@ -16,6 +16,8 @@ interface RowType {
   hasLastCol?: boolean;
   canAddRow?: boolean;
   canAddCustomRow?: boolean;
+  canAddPrimaryPhenomenonRow?: string;
+  canAddSecondaryPhenomenonRow?: string;
   canDelete?: boolean;
   notStandalone?: boolean;
 }
@@ -61,29 +63,34 @@ function App() {
     { id: '5.1', label: 'D', hasLastCol: false, canAddRow: true, canAddCustomRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '6.1', label: 'Dim+', hasLastCol: false, canAddRow: true, canAddCustomRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '7', label: 'Dd', hasLastCol: false, canAddRow: true, canAddCustomRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '8', label: 'Di', hasLastCol: false, canAddRow: true, canAddCustomRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '9', label: 'Dr', hasLastCol: false, canAddRow: true, canAddCustomRow: true, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '8', label: 'Di', hasLastCol: false, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '9', label: 'Dr', hasLastCol: false, section: 1, power: 0, instances: getInitialInstances(firstTableCols.length) },
     //sezione da F a Clob
     { id: '10', label: 'F+', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '11', label: 'F±', hasLastCol: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
     { id: '12', label: 'F-', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: '13', label: 'Sommatoria F', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length), notStandalone: true },
-    { id: '14.1', label: 'M↑', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '14.2', label: 'M@', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '14.3', label: 'M↓', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '13.1', label: 'Sommatoria F', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length), notStandalone: true },
+    { id: '13.2', label: 'Sommatoria F+', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length), notStandalone: true },
+    { id: '14.1', label: 'M↑', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '14.2', label: 'M@', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '14.3', label: 'M↓', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '14.4', label: 'M+', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '14.5', label: 'M±', hasLastCol: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
     { id: '14.6', label: 'M-', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '14.71', label: 'Sommatoria M', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length), notStandalone: true },
+    { id: '14.72', label: 'Sommatoria M+', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length), notStandalone: true },
     { id: '15.1', label: 'FC', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '15.2', label: 'CF', hasLastCol: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
-    { id: '15.21', label: 'CF-', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '15.3', label: 'C', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '16.1', label: 'FC’b', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '16.2', label: 'c’bF', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '16.3', label: 'C’b', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '18.1', label: 'FClob', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '18.2', label: 'ClobF', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '18.3', label: 'Clob', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '18.2', label: 'ClobF', hasLastCol: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '18.3', label: 'Clob', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: '19.1', label: 'F(C)', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: '19.2', label: 'F(C)±', hasLastCol: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: '19.3', label: 'F(C)-', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
   ], [firstTableCols.length]);
   const [firstTableRows, setFirstTableRows] = useState<RowType[]>(firstTableRowsInitialValue);
 
@@ -104,13 +111,11 @@ function App() {
     { id: '26.1', label: 'FC’n', hasLastCol: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '26.2', label: 'C’nF', hasLastCol: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
     { id: '26.3', label: 'C’n', hasLastCol: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '27.1', label: 'F(C)', hasLastCol: true, section: 0, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '27.2', label: 'F(C)±', hasLastCol: true, section: 0, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: '27.3', label: 'F(C)-', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 0, power: 0, instances: getInitialInstances(secondTableCols.length) },
     //seconda sezione
-    { id: '28.1', label: 'V', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
+    { id: '28.1', label: 'V', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '28.2', label: '(V)', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
     { id: '28.3', label: 'Sommatoria V', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
+    { id: '28.4', label: 'Sommatoria V+', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '29', label: 'O+', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '30', label: 'O±', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '31', label: 'O-', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
@@ -118,6 +123,7 @@ function App() {
     { id: '31.2', label: '(O)±', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '31.3', label: '(O)-', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '31.4', label: 'Sommatoria O', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
+    { id: '31.5', label: 'Sommatoria O+', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     //terza sezione
     { id: '32', label: 'H', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '33', label: 'Hd', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
@@ -127,59 +133,85 @@ function App() {
     { id: '35.2', label: 'Anat', hasLastCol: true, canAddRow: false, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '35.3', label: 'Nat', hasLastCol: true, canAddRow: false, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '35.4', label: 'Arch', hasLastCol: true, canAddRow: false, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: '35.5', label: 'Simb', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
+    { id: '35.5', label: 'Simb', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
     //sezione finale
-    { id: '37', label: 'CHOC', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '38', label: 'FENOMENI SPECIALI', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '37', label: 'CHOC', hasLastCol: true, canAddRow: true, section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '38.1', label: 'FENOMENI SPECIALI Primari', hasLastCol: false, canAddRow: true, canAddPrimaryPhenomenonRow: 'Aggiungi Fenomeno Primario', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '38.2', label: 'FENOMENI SPECIALI Secondari', hasLastCol: false, canAddRow: true, canAddSecondaryPhenomenonRow: 'Aggiungi Fenomeno Secondario', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
   ], [secondTableCols.length]);
   const [secondTableRows, setSecondTableRows] = useState<RowType[]>(secondTableRowsInitialValue);
 
-  const possibleExtraFieldsInitialValue = useMemo(() => [
-    { id: 'extra0', label: 'FClob', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra1', label: 'ClobF', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra2', label: 'Clob', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra3', label: 'Cloob', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra4', label: 'FC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra5', label: 'C’bF', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra6', label: 'C’b', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra7', label: 'F/C', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra8', label: 'C/F', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra9', label: 'MC', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra10', label: 'MC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra11', label: 'MClob', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra12', label: 'M(C)', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra13', label: 'ClobC', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra14', label: 'CClob', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra15', label: 'ClobC’b', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra16', label: 'C’bClob', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra17', label: 'C’bClob-', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra18', label: 'FCC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra19', label: 'CFC’b', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra20', label: 'CC’b', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra21', label: 'Clob(C)', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra22', label: '(C)Clob', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra23', label: 'F(C)C', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra24', label: 'CF(C)', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra25', label: 'F(C)C’b', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra26', label: 'C’bF(C)', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra27', label: 'MClobC', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra28', label: 'MClobC’b', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra29', label: 'MClob(C)', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra30', label: 'MClob(C)C', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra31', label: 'MA↑', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra32', label: 'MA↓', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra33', label: 'mi↑', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra34', label: 'mi↓', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra35', label: 'pM', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra36', label: 'M’p’', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra37', label: 'Mr', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra38', label: 'Ef↑', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra39', label: 'Ef↓', power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra40', label: 'Fc+', power: 1, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra41', label: 'cF±', power: 0.5, instances: getInitialInstances(secondTableCols.length) },
-    { id: 'extra42', label: 'c-', power: 0, instances: getInitialInstances(secondTableCols.length) },
-  ], [secondTableCols.length]);
-  const [possibleExtraFields, setPossibleExtraFields] = useState<RowType[]>(possibleExtraFieldsInitialValue);
+  const possibleExtraFields_G_InitialValue = useMemo(() => [
+    { id: 'extra_G_0', label: 'DG', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_G_1', label: 'g', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_G_2', label: 'Gim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_G_3', label: 'GDdim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_G, setPossibleExtraFields_G] = useState<RowType[]>(possibleExtraFields_G_InitialValue);
+
+  const possibleExtraFields_D_InitialValue = useMemo(() => [
+    { id: 'extra_D_0', label: 'DDim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_D_1', label: 'DimD', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_D_2', label: 'DDdim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_D_3', label: 'DGim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_D, setPossibleExtraFields_D] = useState<RowType[]>(possibleExtraFields_D_InitialValue);
+
+  const possibleExtraFields_Dim_InitialValue = useMemo(() => [
+    { id: 'extra_Dim_0', label: 'ImG', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Dim_1', label: 'Ddim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Dim_2', label: 'DdimG', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Dim_3', label: 'DdimD', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Dim_4', label: 'DdimDd', power: 0, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_Dim, setPossibleExtraFields_Dim] = useState<RowType[]>(possibleExtraFields_Dim_InitialValue);
+
+  const possibleExtraFields_Dd_InitialValue = useMemo(() => [
+    { id: 'extra_Dd_0', label: 'DdG', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Dd_1', label: 'DdDim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Dd_2', label: 'DdGim', power: 0, instances: getInitialInstances(firstTableCols.length) },
+
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_Dd, setPossibleExtraFields_Dd] = useState<RowType[]>(possibleExtraFields_Dd_InitialValue);
+
+  const possibleExtraFields_MarrowUp_InitialValue = useMemo(() => [
+    { id: 'extra_MarrowUp_0', label: 'M↑±', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_MarrowUp_1', label: 'M↑-', power: 0, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_MarrowUp, setPossibleExtraFields_MarrowUp] = useState<RowType[]>(possibleExtraFields_MarrowUp_InitialValue);
+
+  const possibleExtraFields_MarrowDown_InitialValue = useMemo(() => [
+    { id: 'extra_MarrowDown_0', label: 'M↑±', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_MarrowDown_1', label: 'M↑-', power: 0, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_MarrowDown, setPossibleExtraFields_MarrowDown] = useState<RowType[]>(possibleExtraFields_MarrowDown_InitialValue);
+
+  const possibleExtraFields_MarrowAt_InitialValue = useMemo(() => [
+    { id: 'extra_MarrowAt_0', label: 'M↑±', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_MarrowAt_1', label: 'M↑-', power: 0, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_MarrowAt, setPossibleExtraFields_MarrowAt] = useState<RowType[]>(possibleExtraFields_MarrowAt_InitialValue);
+
+  const possibleExtraFields_C_InitialValue = useMemo(() => [
+    { id: 'extra_C_0', label: 'FC±', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_1', label: 'CF-', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_2', label: 'MC', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_3', label: 'CM', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_4', label: 'MC’b', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_5', label: 'C’bM', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_6', label: 'M(C)', power: 1, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_C, setPossibleExtraFields_C] = useState<RowType[]>(possibleExtraFields_C_InitialValue);
+
+  const possibleExtraFields_Clob_InitialValue = useMemo(() => [
+    { id: 'extra_Clob_0', label: 'ClobbC', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Clob_0', label: 'CClob', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Clob_0', label: 'ClobC’b', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Clob_0', label: 'C’bClob', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Clob_0', label: 'FCClob', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Clob_0', label: 'ClobFC', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+  ], [firstTableCols.length]);
+  const [possibleExtraFields_Clob, setPossibleExtraFields_Clob] = useState<RowType[]>(possibleExtraFields_Clob_InitialValue);
 
   const [gotResults, setGotResults] = useState(false);
   const [amountOfResponses, setAmountOfResponses] = useState(0);
@@ -261,6 +293,19 @@ function App() {
     updateFunc(updatedRows);
   }, [firstTableRows, secondTableRows, initialTableRows]);
 
+  const [primaryPhenomenonCustomLabel, setPrimaryPhenomenonCustomLabel] = useState('');
+
+  const onChangePrimaryPhenomenonCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
+    setPrimaryPhenomenonCustomLabel(event.target.value);
+  }, [setPrimaryPhenomenonCustomLabel]);
+
+  const [secondaryPhenomenonCustomLabel, setSecondaryPhenomenonCustomLabel] = useState('');
+
+  const onChangeSecondaryPhenomenonCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
+    setSecondaryPhenomenonCustomLabel(event.target.value);
+  }, [setSecondaryPhenomenonCustomLabel]);
+
+
   const getTDs = useCallback((amount: number, row: RowType, columns: string[]) => {
     const result = [];
     const differential = row.hasLastCol ? 0 : 1;
@@ -319,6 +364,22 @@ function App() {
           noInput = false;
           updatingValue = amountOfResponsesVal;
         } else if (currentCol === 'Punteggio') {
+          noInput = true;
+          updatingValue = 0;
+        } else {
+          const currentColNumOfAnswers = allRowsWithTargetLetter.map(row => row.instances[i]).reduce((acc, currVal) => acc + currVal, 0);
+          noInput = false;
+          updatingValue = currentColNumOfAnswers;
+        }
+      } else if (row.label === 'Sommatoria F+') {
+        const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
+        const allStandaloneRows = allRowsExceptTime.filter(row => !row.notStandalone);
+        const allRowsWithTargetLetter = allStandaloneRows.filter(row => row.label === 'F+' || row.label === 'F±' || row.label === 'F-');
+        const fusedTableRowsFilledCellsOnly = allRowsWithTargetLetter.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
+        if (currentCol === 'Sommatoria Formale') {
+          noInput = true;
+          updatingValue = 0;
+        } else if (currentCol === 'Punteggio') {
           const rowsWithTotal = fusedTableRowsFilledCellsOnly.map(row => ({ ...row, total: row.instances.reduce((partialSum, a) => partialSum + a, 0) * (row.power ?? 0) }));
           const totalPower = rowsWithTotal.map(row => row.total).reduce((partialSum, a) => partialSum + a, 0);
           noInput = false;
@@ -331,12 +392,28 @@ function App() {
       } else if (row.label === 'Sommatoria V') {
         const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
         const allStandaloneRows = allRowsExceptTime.filter(row => !row.notStandalone);
-        const allRowsWithTargetLetter = allStandaloneRows.filter(row => row.label === 'V+' || row.label === 'V±' || row.label === 'V-');
+        const allRowsWithTargetLetter = allStandaloneRows.filter(row => row.label === 'V' || row.label === '(V)');
         const fusedTableRowsFilledCellsOnly = allRowsWithTargetLetter.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
         if (currentCol === 'Sommatoria Formale') {
           const amountOfResponsesVal = fusedTableRowsFilledCellsOnly.map(row => row.instances.reduce((partialSum, a) => partialSum + a, 0)).reduce((partialSum, a) => partialSum + a, 0);
           noInput = false;
           updatingValue = amountOfResponsesVal;
+        } else if (currentCol === 'Punteggio') {
+          noInput = true;
+          updatingValue = 0;
+        } else {
+          const currentColNumOfAnswers = allRowsWithTargetLetter.map(row => row.instances[i]).reduce((acc, currVal) => acc + currVal, 0);
+          noInput = false;
+          updatingValue = currentColNumOfAnswers;
+        }
+      } else if (row.label === 'Sommatoria V+') {
+        const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
+        const allStandaloneRows = allRowsExceptTime.filter(row => !row.notStandalone);
+        const allRowsWithTargetLetter = allStandaloneRows.filter(row => row.label === 'V' || row.label === '(V)');
+        const fusedTableRowsFilledCellsOnly = allRowsWithTargetLetter.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
+        if (currentCol === 'Sommatoria Formale') {
+          noInput = true;
+          updatingValue = 0;
         } else if (currentCol === 'Punteggio') {
           const rowsWithTotal = fusedTableRowsFilledCellsOnly.map(row => ({ ...row, total: row.instances.reduce((partialSum, a) => partialSum + a, 0) * (row.power ?? 0) }));
           const totalPower = rowsWithTotal.map(row => row.total).reduce((partialSum, a) => partialSum + a, 0);
@@ -356,6 +433,21 @@ function App() {
           noInput = false;
           updatingValue = amountOfResponsesVal;
         } else if (currentCol === 'Punteggio') {
+          noInput = true;
+          updatingValue = 0;
+        } else {
+          const currentColNumOfAnswers = allRowsWithTargetLetter.map(row => row.instances[i]).reduce((acc, currVal) => acc + currVal, 0);
+          noInput = false;
+          updatingValue = currentColNumOfAnswers;
+        }
+      } else if (row.label === 'Sommatoria O+') {
+        const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
+        const allRowsWithTargetLetter = allRowsExceptTime.filter(row => row.label === 'O+' || row.label === 'O±' || row.label === 'O-' || row.label === '(O)+' || row.label === '(O)±' || row.label === '(O)-');
+        const fusedTableRowsFilledCellsOnly = allRowsWithTargetLetter.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
+        if (currentCol === 'Sommatoria Formale') {
+          noInput = true;
+          updatingValue = 0;
+        } else if (currentCol === 'Punteggio') {
           const rowsWithTotal = fusedTableRowsFilledCellsOnly.map(row => ({ ...row, total: row.instances.reduce((partialSum, a) => partialSum + a, 0) * (row.power ?? 0) }));
           const totalPower = rowsWithTotal.map(row => row.total).reduce((partialSum, a) => partialSum + a, 0);
           noInput = false;
@@ -364,6 +456,52 @@ function App() {
           const currentColNumOfPoints = allRowsWithTargetLetter.map(row => row.instances[i] * (row.power ?? 0)).reduce((acc, currVal) => acc + currVal, 0);
           noInput = false;
           updatingValue = currentColNumOfPoints;
+        }
+      } else if (row.label === 'Sommatoria M') {
+        const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
+        const allStandaloneRows = allRowsExceptTime.filter(row => !row.notStandalone);
+        const allRowsWithTargetLetter = allStandaloneRows.filter(row => row.label === 'M↑' || row.label === 'M@' || row.label === 'M↓' || row.label === 'M+' || row.label === 'M±' || row.label === 'M-');
+        const fusedTableRowsFilledCellsOnly = allRowsWithTargetLetter.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
+        if (currentCol === 'Sommatoria Formale') {
+          const amountOfResponsesVal = fusedTableRowsFilledCellsOnly.map(row => row.instances.reduce((partialSum, a) => partialSum + a, 0)).reduce((partialSum, a) => partialSum + a, 0);
+          noInput = false;
+          updatingValue = amountOfResponsesVal;
+        } else if (currentCol === 'Punteggio') {
+          noInput = true;
+          updatingValue = 0;
+        } else {
+          const currentColNumOfAnswers = allRowsWithTargetLetter.map(row => row.instances[i]).reduce((acc, currVal) => acc + currVal, 0);
+          noInput = false;
+          updatingValue = currentColNumOfAnswers;
+        }
+      } else if (row.label === 'Sommatoria M+') {
+        const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
+        const allStandaloneRows = allRowsExceptTime.filter(row => !row.notStandalone);
+        const allRowsWithTargetLetter = allStandaloneRows.filter(row => row.label === 'M↑' || row.label === 'M@' || row.label === 'M↓' || row.label === 'M+' || row.label === 'M±' || row.label === 'M-');
+        const fusedTableRowsFilledCellsOnly = allRowsWithTargetLetter.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
+        if (currentCol === 'Sommatoria Formale') {
+          noInput = true;
+          updatingValue = 0;
+        } else if (currentCol === 'Punteggio') {
+          const rowsWithTotal = fusedTableRowsFilledCellsOnly.map(row => ({ ...row, total: row.instances.reduce((partialSum, a) => partialSum + a, 0) * (row.power ?? 0) }));
+          const totalPower = rowsWithTotal.map(row => row.total).reduce((partialSum, a) => partialSum + a, 0);
+          noInput = false;
+          updatingValue = totalPower;
+        } else {
+          const currentColNumOfPoints = allRowsWithTargetLetter.map(row => row.instances[i] * (row.power ?? 0)).reduce((acc, currVal) => acc + currVal, 0);
+          noInput = false;
+          updatingValue = currentColNumOfPoints;
+        }
+      } else if (row.label === 'FENOMENI SPECIALI Primari' || row.label === 'FENOMENI SPECIALI sECONDARI') {
+        if (currentCol === 'Sommatoria Formale') {
+          noInput = true;
+          updatingValue = 0;
+        } else if (currentCol === 'Punteggio') {
+          noInput = true;
+          updatingValue = 0;
+        } else {
+          noInput = true;
+          updatingValue = 0;
         }
       } else {
         if (currentCol === 'Somma Totale') {
@@ -446,9 +584,9 @@ function App() {
 
   const [customInputName, setCustomNameInput] = useState('');
 
-  const onCreateCustomInput = useCallback(() => {
-    const prevRow = secondTableRows.find(el => el.label === 'Ad');
-    const targetIndex = secondTableRows.findIndex(el => el.label === 'Ad');
+  const onCreateCustomRow = useCallback((prevRowLabel: string) => {
+    const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
+    const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
     if (prevRow) {
       const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: customInputName, canAddRow: false };
       const updatedRows = [...secondTableRows];
@@ -458,10 +596,48 @@ function App() {
     }
   }, [secondTableRows, customInputName]);
 
+  const onCreatePrimaryPhenomenonRow = useCallback((prevRowLabel: string) => {
+    const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
+    const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
+    if (prevRow) {
+      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: primaryPhenomenonCustomLabel, canAddRow: false, canDelete: true };
+      const updatedRows = [...secondTableRows];
+      insertAt(updatedRows, targetIndex + 1, newRow);
+      setSecondTableRows(updatedRows);
+      setCustomNameInput('');
+    }
+    setPrimaryPhenomenonCustomLabel('');
+  }, [secondTableRows, primaryPhenomenonCustomLabel]);
+
+  const onCreateSecondaryPhenomenonRow = useCallback((prevRowLabel: string) => {
+    const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
+    const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
+    if (prevRow) {
+      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: secondaryPhenomenonCustomLabel, canAddRow: false, canDelete: true };
+      const updatedRows = [...secondTableRows];
+      insertAt(updatedRows, targetIndex + 1, newRow);
+      setSecondTableRows(updatedRows);
+      setCustomNameInput('');
+    }
+    setSecondaryPhenomenonCustomLabel('');
+  }, [secondTableRows, secondaryPhenomenonCustomLabel]);
+
   const getExtraRowButton = useCallback((row: RowType) => {
     let extraRowBtn;
     if (row.canAddCustomRow) {
-      const targetCustomFields = possibleExtraFields; //todo: iridion - qui ci sarà la logica che decide quale lista prendere a seconda della row.label
+      let targetCustomFields: any[] = [];
+      switch (row.label) {
+        case 'G': targetCustomFields = possibleExtraFields_G; break;
+        case 'D': targetCustomFields = possibleExtraFields_D; break;
+        case 'Dim+': targetCustomFields = possibleExtraFields_Dd; break;
+        case 'Dd': targetCustomFields = possibleExtraFields_Dim; break;
+        case 'M↑': targetCustomFields = possibleExtraFields_MarrowUp; break;
+        case 'M@': targetCustomFields = possibleExtraFields_MarrowAt; break;
+        case 'M↓': targetCustomFields = possibleExtraFields_MarrowDown; break;
+        case 'C': targetCustomFields = possibleExtraFields_C; break;
+        case 'Clob': targetCustomFields = possibleExtraFields_Clob; break;
+        default: targetCustomFields = []; console.log('ERROR ASSIGNING EXTRA FIELDS FOR THIS LABEL:', row.label); break;
+      };
       extraRowBtn = (
         <tr>
           <td>
@@ -470,8 +646,48 @@ function App() {
                 {getOptions(targetCustomFields)}
               </select>
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomInput()}>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomRow(row.label)}>
               Aggiungi Riga Custom <i className="pl-2 fa-solid fa-plus"></i>
+            </Button>
+          </td>
+        </tr>
+      );
+    } else if (row.canAddPrimaryPhenomenonRow?.length) {
+      extraRowBtn = (
+        <tr>
+          <td>
+            <div className="input-group children-centered-horizontally">
+              <input
+                aria-label="Inserisci il nome del fenomeno primario"
+                type="text"
+                id={row.id + Date.now()}
+                value={primaryPhenomenonCustomLabel}
+                className={"form-control"}
+                onChange={event => onChangePrimaryPhenomenonCustomLabel(row.id, event)}
+              />
+            </div>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePrimaryPhenomenonRow(row.label)}>
+              {row.canAddPrimaryPhenomenonRow} <i className="pl-2 fa-solid fa-plus"></i>
+            </Button>
+          </td>
+        </tr>
+      );
+    } else if (row.canAddSecondaryPhenomenonRow?.length) {
+      extraRowBtn = (
+        <tr>
+          <td>
+            <div className="input-group children-centered-horizontally">
+              <input
+                aria-label="Inserisci il nome del fenomeno secondario"
+                type="text"
+                id={row.id + Date.now()}
+                value={secondaryPhenomenonCustomLabel}
+                className={"form-control"}
+                onChange={event => onChangeSecondaryPhenomenonCustomLabel(row.id, event)}
+              />
+            </div>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateSecondaryPhenomenonRow(row.label)}>
+              {row.canAddSecondaryPhenomenonRow} <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
         </tr>
@@ -486,7 +702,27 @@ function App() {
       );
     }
     return row.canAddRow ? extraRowBtn : '';
-  }, [addRow, onCreateCustomInput, getOptions, onSelectOptions, possibleExtraFields]);
+  }, [
+    addRow,
+    onCreateCustomRow,
+    getOptions,
+    onSelectOptions,
+    possibleExtraFields_D,
+    possibleExtraFields_G,
+    possibleExtraFields_Dd,
+    possibleExtraFields_Dim,
+    possibleExtraFields_C,
+    possibleExtraFields_MarrowAt,
+    possibleExtraFields_MarrowDown,
+    possibleExtraFields_MarrowUp,
+    possibleExtraFields_Clob,
+    primaryPhenomenonCustomLabel,
+    onChangePrimaryPhenomenonCustomLabel,
+    onCreatePrimaryPhenomenonRow,
+    secondaryPhenomenonCustomLabel,
+    onChangeSecondaryPhenomenonCustomLabel,
+    onCreateSecondaryPhenomenonRow
+  ]);
 
   const deleteRow = useCallback((rowId: string) => {
     const isInFirstTable = firstTableRows.find(el => el.id === rowId);
@@ -545,8 +781,28 @@ function App() {
     setResultingPercentage(0);
     setFirstTableRows(firstTableRowsInitialValue);
     setSecondTableRows(secondTableRowsInitialValue);
-    setPossibleExtraFields(possibleExtraFieldsInitialValue);
-  }, [firstTableRowsInitialValue, possibleExtraFieldsInitialValue, secondTableRowsInitialValue]);
+    setPossibleExtraFields_D(possibleExtraFields_D_InitialValue);
+    setPossibleExtraFields_G(possibleExtraFields_G_InitialValue);
+    setPossibleExtraFields_Dd(possibleExtraFields_Dd_InitialValue);
+    setPossibleExtraFields_Dim(possibleExtraFields_Dim_InitialValue);
+    setPossibleExtraFields_MarrowUp(possibleExtraFields_MarrowUp_InitialValue);
+    setPossibleExtraFields_MarrowAt(possibleExtraFields_MarrowAt_InitialValue);
+    setPossibleExtraFields_MarrowDown(possibleExtraFields_MarrowDown_InitialValue);
+    setPossibleExtraFields_C(possibleExtraFields_C_InitialValue);
+    setPossibleExtraFields_Clob(possibleExtraFields_Clob_InitialValue);
+  }, [
+    firstTableRowsInitialValue,
+    secondTableRowsInitialValue,
+    possibleExtraFields_D_InitialValue,
+    possibleExtraFields_G_InitialValue,
+    possibleExtraFields_Dd_InitialValue,
+    possibleExtraFields_Dim_InitialValue,
+    possibleExtraFields_MarrowUp_InitialValue,
+    possibleExtraFields_MarrowAt_InitialValue,
+    possibleExtraFields_MarrowDown_InitialValue,
+    possibleExtraFields_C_InitialValue,
+    possibleExtraFields_Clob_InitialValue
+  ]);
 
   return (
     <div className="App">
@@ -576,6 +832,8 @@ function App() {
             <tr key='divider2' className="table-divider"></tr>
             {getTableRows(firstTableRows.filter(el => el.section === 2), firstTableCols)}
             <tr key='divider3' className="table-divider"></tr>
+            {getTableRows(firstTableRows.filter(el => el.section === 3), firstTableCols)}
+            <tr key='divider4' className="table-divider"></tr>
           </tbody>
         </Table>
         <Table striped bordered id="second-table">
@@ -591,6 +849,8 @@ function App() {
             <tr key='divider2' className="table-divider"></tr>
             {getTableRows(secondTableRows.filter(el => el.section === 2), secondTableCols)}
             <tr key='divider3' className="table-divider"></tr>
+            {getTableRows(secondTableRows.filter(el => el.section === 3), secondTableCols)}
+            <tr key='divider4' className="table-divider"></tr>
           </tbody>
         </Table>
       </div>
