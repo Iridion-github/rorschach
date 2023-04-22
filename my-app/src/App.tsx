@@ -701,7 +701,7 @@ function App() {
                 onChange={event => onChangeChocCustomLabel(row.id, event)}
               />
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateChocRow(row.label)}>
+            <Button disabled={!chocCustomLabel?.length} key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateChocRow(row.label)}>
               {row.canAddChocRow} <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
@@ -721,7 +721,7 @@ function App() {
                 onChange={event => onChangePhenomenonCustomLabel(row.id, event)}
               />
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePhenomenonRow(row.label)}>
+            <Button disabled={!phenomenonCustomLabel?.length} key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePhenomenonRow(row.label)}>
               {row.canAddPhenomenonRow} <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
@@ -741,7 +741,7 @@ function App() {
                 onChange={event => onChangePrimaryContentCustomLabel(row.id, event)}
               />
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePrimaryContentRow(row.label)}>
+            <Button disabled={!primaryContentCustomLabel?.length} key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePrimaryContentRow(row.label)}>
               {row.canAddPrimaryContentRow} <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
@@ -761,7 +761,7 @@ function App() {
                 onChange={event => onChangeSecondaryContentCustomLabel(row.id, event)}
               />
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateSecondaryContentRow(row.label)}>
+            <Button disabled={!secondaryContentCustomLabel?.length} key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateSecondaryContentRow(row.label)}>
               {row.canAddSecondaryContentRow} <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
