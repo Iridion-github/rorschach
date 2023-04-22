@@ -16,8 +16,10 @@ interface RowType {
   hasLastCol?: boolean;
   canAddRow?: boolean;
   canAddCustomRow?: boolean;
-  canAddPrimaryPhenomenonRow?: string;
-  canAddSecondaryPhenomenonRow?: string;
+  canAddChocRow?: string;
+  canAddPhenomenonRow?: string;
+  canAddPrimaryContentRow?: string;
+  canAddSecondaryContentRow?: string;
   canDelete?: boolean;
   notStandalone?: boolean;
 }
@@ -74,9 +76,6 @@ function App() {
     { id: '14.1', label: 'M↑', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '14.2', label: 'M@', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: '14.3', label: 'M↓', hasLastCol: true, canAddRow: true, canAddCustomRow: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '14.4', label: 'M+', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: '14.5', label: 'M±', hasLastCol: true, section: 2, power: 0.5, instances: getInitialInstances(firstTableCols.length) },
-    { id: '14.6', label: 'M-', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length) },
     { id: '14.71', label: 'Sommatoria M', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length), notStandalone: true },
     { id: '14.72', label: 'Sommatoria M+', hasLastCol: true, section: 2, power: 0, instances: getInitialInstances(firstTableCols.length), notStandalone: true },
     { id: '15.1', label: 'FC', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(firstTableCols.length) },
@@ -115,7 +114,6 @@ function App() {
     { id: '28.1', label: 'V', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '28.2', label: '(V)', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length) },
     { id: '28.3', label: 'Sommatoria V', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
-    { id: '28.4', label: 'Sommatoria V+', hasLastCol: true, section: 1, power: 0.5, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '29', label: 'O+', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '30', label: 'O±', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
     { id: '31', label: 'O-', hasLastCol: true, section: 1, power: 1, instances: getInitialInstances(secondTableCols.length), notStandalone: true },
@@ -135,9 +133,10 @@ function App() {
     { id: '35.4', label: 'Arch', hasLastCol: true, canAddRow: false, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
     { id: '35.5', label: 'Simb', hasLastCol: true, section: 2, power: 1, instances: getInitialInstances(secondTableCols.length) },
     //sezione finale
-    { id: '37', label: 'CHOC', hasLastCol: true, canAddRow: true, section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '38.1', label: 'FENOMENI SPECIALI Primari', hasLastCol: false, canAddRow: true, canAddPrimaryPhenomenonRow: 'Aggiungi Fenomeno Primario', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
-    { id: '38.2', label: 'FENOMENI SPECIALI Secondari', hasLastCol: false, canAddRow: true, canAddSecondaryPhenomenonRow: 'Aggiungi Fenomeno Secondario', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '37', label: 'CHOC', hasLastCol: false, canAddRow: true, canAddChocRow: 'Aggiungi Choc', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '38.1', label: 'FENOMENI SPECIALI', hasLastCol: false, canAddRow: true, canAddPhenomenonRow: 'Aggiungi Fenomeno Speciale', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '39.1', label: 'Contenuti Primari', hasLastCol: false, canAddRow: true, canAddPrimaryContentRow: 'Aggiungi Contenuto Primario', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
+    { id: '39.2', label: 'Contenuti Secondari', hasLastCol: false, canAddRow: true, canAddSecondaryContentRow: 'Aggiungi Contenuto Secondario', section: 3, power: 0, instances: getInitialInstances(secondTableCols.length) },
   ], [secondTableCols.length]);
   const [secondTableRows, setSecondTableRows] = useState<RowType[]>(secondTableRowsInitialValue);
 
@@ -193,18 +192,22 @@ function App() {
   const [possibleExtraFields_MarrowAt, setPossibleExtraFields_MarrowAt] = useState<RowType[]>(possibleExtraFields_MarrowAt_InitialValue);
 
   const possibleExtraFields_C_InitialValue = useMemo(() => [
-    { id: 'extra_C_0', label: 'FC±', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
-    { id: 'extra_C_1', label: 'CF-', power: 0, instances: getInitialInstances(firstTableCols.length) },
-    { id: 'extra_C_2', label: 'MC', power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: 'extra_C_3', label: 'CM', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
-    { id: 'extra_C_4', label: 'MC’b', power: 1, instances: getInitialInstances(firstTableCols.length) },
-    { id: 'extra_C_5', label: 'C’bM', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
-    { id: 'extra_C_6', label: 'M(C)', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_0', label: 'CF-', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_1', label: 'FC±', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_2', label: 'FC-', power: 0, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_3', label: 'F/C', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_4', label: 'C/F', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_5', label: 'CM', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_6', label: 'MC', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_7', label: 'C’bM', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_8', label: 'MC’b', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_9', label: 'M(C)', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_C_10', label: 'C(M)', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
   ], [firstTableCols.length]);
   const [possibleExtraFields_C, setPossibleExtraFields_C] = useState<RowType[]>(possibleExtraFields_C_InitialValue);
 
   const possibleExtraFields_Clob_InitialValue = useMemo(() => [
-    { id: 'extra_Clob_0', label: 'ClobbC', power: 1, instances: getInitialInstances(firstTableCols.length) },
+    { id: 'extra_Clob_0', label: 'ClobC', power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: 'extra_Clob_0', label: 'CClob', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
     { id: 'extra_Clob_0', label: 'ClobC’b', power: 1, instances: getInitialInstances(firstTableCols.length) },
     { id: 'extra_Clob_0', label: 'C’bClob', power: 0.5, instances: getInitialInstances(firstTableCols.length) },
@@ -217,21 +220,22 @@ function App() {
   const [amountOfResponses, setAmountOfResponses] = useState(0);
   const [resultingPercentage, setResultingPercentage] = useState(0);
 
-  const getOptions = useCallback((extraFields: any[]) => {
-    function compare(a: any, b: any) {
-      if (a.label < b.label) {
-        return -1;
-      }
-      if (a.label > b.label) {
-        return 1;
-      }
-      return 0;
+  const getOptions = useCallback((extraFields: any[], shouldSort: boolean = true) => {
+    function compareLabel(a: any, b: any) { return a.label.localeCompare(b.label); };
+    if (shouldSort) {
+      return extraFields.sort(compareLabel).map(field => {
+        return (
+          <option key={field.label} value={JSON.stringify(field)}>{field.label}</option>
+        );
+      });
+    } else {
+      const result = extraFields.map(field => {
+        return (
+          <option key={field.label} value={JSON.stringify(field)}>{field.label}</option>
+        );
+      });
+      return result;
     }
-    return extraFields.sort(compare).map(field => {
-      return (
-        <option key={field.label} value={JSON.stringify(field)}>{field.label}</option>
-      );
-    });
   }, []);
 
   const onSelectOptions = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
@@ -293,18 +297,30 @@ function App() {
     updateFunc(updatedRows);
   }, [firstTableRows, secondTableRows, initialTableRows]);
 
-  const [primaryPhenomenonCustomLabel, setPrimaryPhenomenonCustomLabel] = useState('');
 
-  const onChangePrimaryPhenomenonCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
-    setPrimaryPhenomenonCustomLabel(event.target.value);
-  }, [setPrimaryPhenomenonCustomLabel]);
+  const [chocCustomLabel, setChocCustomLabel] = useState('');
 
-  const [secondaryPhenomenonCustomLabel, setSecondaryPhenomenonCustomLabel] = useState('');
+  const onChangeChocCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
+    setChocCustomLabel(event.target.value);
+  }, [setChocCustomLabel]);
 
-  const onChangeSecondaryPhenomenonCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
-    setSecondaryPhenomenonCustomLabel(event.target.value);
-  }, [setSecondaryPhenomenonCustomLabel]);
+  const [phenomenonCustomLabel, setPhenomenonCustomLabel] = useState('');
 
+  const onChangePhenomenonCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
+    setPhenomenonCustomLabel(event.target.value);
+  }, [setPhenomenonCustomLabel]);
+
+  const [primaryContentCustomLabel, setPrimaryContentCustomLabel] = useState('');
+
+  const onChangePrimaryContentCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
+    setPrimaryContentCustomLabel(event.target.value);
+  }, [setPrimaryContentCustomLabel]);
+
+  const [secondaryContentCustomLabel, setSecondaryContentCustomLabel] = useState('');
+
+  const onChangeSecondaryContentCustomLabel = useCallback((rowId: string, event: ChangeEvent<HTMLInputElement>) => {
+    setSecondaryContentCustomLabel(event.target.value);
+  }, [setSecondaryContentCustomLabel]);
 
   const getTDs = useCallback((amount: number, row: RowType, columns: string[]) => {
     const result = [];
@@ -406,24 +422,6 @@ function App() {
           noInput = false;
           updatingValue = currentColNumOfAnswers;
         }
-      } else if (row.label === 'Sommatoria V+') {
-        const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
-        const allStandaloneRows = allRowsExceptTime.filter(row => !row.notStandalone);
-        const allRowsWithTargetLetter = allStandaloneRows.filter(row => row.label === 'V' || row.label === '(V)');
-        const fusedTableRowsFilledCellsOnly = allRowsWithTargetLetter.filter(row => row.instances.reduce((partialSum, a) => partialSum + a, 0) > 0);
-        if (currentCol === 'Sommatoria Formale') {
-          noInput = true;
-          updatingValue = 0;
-        } else if (currentCol === 'Punteggio') {
-          const rowsWithTotal = fusedTableRowsFilledCellsOnly.map(row => ({ ...row, total: row.instances.reduce((partialSum, a) => partialSum + a, 0) * (row.power ?? 0) }));
-          const totalPower = rowsWithTotal.map(row => row.total).reduce((partialSum, a) => partialSum + a, 0);
-          noInput = false;
-          updatingValue = totalPower;
-        } else {
-          const currentColNumOfPoints = allRowsWithTargetLetter.map(row => row.instances[i] * (row.power ?? 0)).reduce((acc, currVal) => acc + currVal, 0);
-          noInput = false;
-          updatingValue = currentColNumOfPoints;
-        }
       } else if (row.label === 'Sommatoria O') {
         const allRowsExceptTime = [...firstTableRows, ...secondTableRows];
         const allRowsWithTargetLetter = allRowsExceptTime.filter(row => row.label === 'O+' || row.label === 'O±' || row.label === 'O-' || row.label === '(O)+' || row.label === '(O)±' || row.label === '(O)-');
@@ -492,7 +490,7 @@ function App() {
           noInput = false;
           updatingValue = currentColNumOfPoints;
         }
-      } else if (row.label === 'FENOMENI SPECIALI Primari' || row.label === 'FENOMENI SPECIALI sECONDARI') {
+      } else if (row.label === 'FENOMENI SPECIALI' || row.label === 'Contenuti Primari' || row.label === 'Contenuti Secondari' || row.label === 'CHOC') {
         if (currentCol === 'Sommatoria Formale') {
           noInput = true;
           updatingValue = 0;
@@ -596,36 +594,66 @@ function App() {
     }
   }, [secondTableRows, customInputName]);
 
-  const onCreatePrimaryPhenomenonRow = useCallback((prevRowLabel: string) => {
+  const onCreateChocRow = useCallback((prevRowLabel: string) => {
     const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
     const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
     if (prevRow) {
-      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: primaryPhenomenonCustomLabel, canAddRow: false, canDelete: true };
+      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: chocCustomLabel, canAddRow: false, canDelete: true };
       const updatedRows = [...secondTableRows];
       insertAt(updatedRows, targetIndex + 1, newRow);
       setSecondTableRows(updatedRows);
       setCustomNameInput('');
     }
-    setPrimaryPhenomenonCustomLabel('');
-  }, [secondTableRows, primaryPhenomenonCustomLabel]);
+    setChocCustomLabel('');
+  }, [secondTableRows, chocCustomLabel]);
 
-  const onCreateSecondaryPhenomenonRow = useCallback((prevRowLabel: string) => {
+  const onCreatePhenomenonRow = useCallback((prevRowLabel: string) => {
     const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
     const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
     if (prevRow) {
-      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: secondaryPhenomenonCustomLabel, canAddRow: false, canDelete: true };
+      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: phenomenonCustomLabel, canAddRow: false, canDelete: true };
       const updatedRows = [...secondTableRows];
       insertAt(updatedRows, targetIndex + 1, newRow);
       setSecondTableRows(updatedRows);
       setCustomNameInput('');
     }
-    setSecondaryPhenomenonCustomLabel('');
-  }, [secondTableRows, secondaryPhenomenonCustomLabel]);
+    setPhenomenonCustomLabel('');
+  }, [secondTableRows, phenomenonCustomLabel]);
+
+  const onCreatePrimaryContentRow = useCallback((prevRowLabel: string) => {
+    const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
+    const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
+    if (prevRow) {
+      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: primaryContentCustomLabel, canAddRow: false, canDelete: true };
+      const updatedRows = [...secondTableRows];
+      insertAt(updatedRows, targetIndex + 1, newRow);
+      setSecondTableRows(updatedRows);
+      setCustomNameInput('');
+    }
+    setPrimaryContentCustomLabel('');
+  }, [secondTableRows, primaryContentCustomLabel]);
+
+  const onCreateSecondaryContentRow = useCallback((prevRowLabel: string) => {
+    const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
+    const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
+    if (prevRow) {
+      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: secondaryContentCustomLabel, canAddRow: false, canDelete: true };
+      const updatedRows = [...secondTableRows];
+      insertAt(updatedRows, targetIndex + 1, newRow);
+      setSecondTableRows(updatedRows);
+      setCustomNameInput('');
+    }
+    setSecondaryContentCustomLabel('');
+  }, [secondTableRows, secondaryContentCustomLabel]);
+
+
+
 
   const getExtraRowButton = useCallback((row: RowType) => {
     let extraRowBtn;
     if (row.canAddCustomRow) {
       let targetCustomFields: any[] = [];
+      let shouldSort = true;
       switch (row.label) {
         case 'G': targetCustomFields = possibleExtraFields_G; break;
         case 'D': targetCustomFields = possibleExtraFields_D; break;
@@ -634,7 +662,9 @@ function App() {
         case 'M↑': targetCustomFields = possibleExtraFields_MarrowUp; break;
         case 'M@': targetCustomFields = possibleExtraFields_MarrowAt; break;
         case 'M↓': targetCustomFields = possibleExtraFields_MarrowDown; break;
-        case 'C': targetCustomFields = possibleExtraFields_C; break;
+        case 'C': targetCustomFields = possibleExtraFields_C;
+          shouldSort = false;
+          break;
         case 'Clob': targetCustomFields = possibleExtraFields_Clob; break;
         default: targetCustomFields = []; console.log('ERROR ASSIGNING EXTRA FIELDS FOR THIS LABEL:', row.label); break;
       };
@@ -643,7 +673,7 @@ function App() {
           <td>
             <div className="input-group children-centered-horizontally">
               <select className="form-select" aria-label="Seleziona l'etichetta" onChange={onSelectOptions}>
-                {getOptions(targetCustomFields)}
+                {getOptions(targetCustomFields, shouldSort)}
               </select>
             </div>
             <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomRow(row.label)}>
@@ -652,42 +682,82 @@ function App() {
           </td>
         </tr>
       );
-    } else if (row.canAddPrimaryPhenomenonRow?.length) {
+    } else if (row.canAddChocRow?.length) {
       extraRowBtn = (
         <tr>
           <td>
             <div className="input-group children-centered-horizontally">
               <input
-                aria-label="Inserisci il nome del fenomeno primario"
+                aria-label="Inserisci il nome dello choc"
                 type="text"
                 id={row.id + Date.now()}
-                value={primaryPhenomenonCustomLabel}
+                value={chocCustomLabel}
                 className={"form-control"}
-                onChange={event => onChangePrimaryPhenomenonCustomLabel(row.id, event)}
+                onChange={event => onChangeChocCustomLabel(row.id, event)}
               />
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePrimaryPhenomenonRow(row.label)}>
-              {row.canAddPrimaryPhenomenonRow} <i className="pl-2 fa-solid fa-plus"></i>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateChocRow(row.label)}>
+              {row.canAddChocRow} <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
         </tr>
       );
-    } else if (row.canAddSecondaryPhenomenonRow?.length) {
+    } else if (row.canAddPhenomenonRow?.length) {
       extraRowBtn = (
         <tr>
           <td>
             <div className="input-group children-centered-horizontally">
               <input
-                aria-label="Inserisci il nome del fenomeno secondario"
+                aria-label="Inserisci il nome del fenomeno"
                 type="text"
                 id={row.id + Date.now()}
-                value={secondaryPhenomenonCustomLabel}
+                value={phenomenonCustomLabel}
                 className={"form-control"}
-                onChange={event => onChangeSecondaryPhenomenonCustomLabel(row.id, event)}
+                onChange={event => onChangePhenomenonCustomLabel(row.id, event)}
               />
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateSecondaryPhenomenonRow(row.label)}>
-              {row.canAddSecondaryPhenomenonRow} <i className="pl-2 fa-solid fa-plus"></i>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePhenomenonRow(row.label)}>
+              {row.canAddPhenomenonRow} <i className="pl-2 fa-solid fa-plus"></i>
+            </Button>
+          </td>
+        </tr>
+      );
+    } else if (row.canAddPrimaryContentRow?.length) {
+      extraRowBtn = (
+        <tr>
+          <td>
+            <div className="input-group children-centered-horizontally">
+              <input
+                aria-label="Inserisci il nome del contenuto primario"
+                type="text"
+                id={row.id + Date.now()}
+                value={primaryContentCustomLabel}
+                className={"form-control"}
+                onChange={event => onChangePrimaryContentCustomLabel(row.id, event)}
+              />
+            </div>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreatePrimaryContentRow(row.label)}>
+              {row.canAddPrimaryContentRow} <i className="pl-2 fa-solid fa-plus"></i>
+            </Button>
+          </td>
+        </tr>
+      );
+    } else if (row.canAddSecondaryContentRow?.length) {
+      extraRowBtn = (
+        <tr>
+          <td>
+            <div className="input-group children-centered-horizontally">
+              <input
+                aria-label="Inserisci il nome del contenuto secondario"
+                type="text"
+                id={row.id + Date.now()}
+                value={secondaryContentCustomLabel}
+                className={"form-control"}
+                onChange={event => onChangeSecondaryContentCustomLabel(row.id, event)}
+              />
+            </div>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateSecondaryContentRow(row.label)}>
+              {row.canAddSecondaryContentRow} <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
         </tr>
@@ -716,12 +786,18 @@ function App() {
     possibleExtraFields_MarrowDown,
     possibleExtraFields_MarrowUp,
     possibleExtraFields_Clob,
-    primaryPhenomenonCustomLabel,
-    onChangePrimaryPhenomenonCustomLabel,
-    onCreatePrimaryPhenomenonRow,
-    secondaryPhenomenonCustomLabel,
-    onChangeSecondaryPhenomenonCustomLabel,
-    onCreateSecondaryPhenomenonRow
+    chocCustomLabel,
+    onChangeChocCustomLabel,
+    onCreateChocRow,
+    phenomenonCustomLabel,
+    onChangePhenomenonCustomLabel,
+    onCreatePhenomenonRow,
+    primaryContentCustomLabel,
+    onChangePrimaryContentCustomLabel,
+    onCreatePrimaryContentRow,
+    secondaryContentCustomLabel,
+    onChangeSecondaryContentCustomLabel,
+    onCreateSecondaryContentRow,
   ]);
 
   const deleteRow = useCallback((rowId: string) => {
@@ -854,7 +930,7 @@ function App() {
           </tbody>
         </Table>
       </div>
-      <div className='w-100'>
+      <div className='w-100 lower-btns-row'>
         <Button className="submit-btn" size="lg" variant="success" onClick={calculateResults}> Ottieni Risultati <i className="pl-2 fa-solid fa-right-to-bracket"></i></Button>
         <Button className="reset-btn" size="lg" variant="danger" onClick={resetAll}> Reset</Button>
       </div>
