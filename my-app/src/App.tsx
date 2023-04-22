@@ -240,7 +240,7 @@ function App() {
 
   const onSelectOptions = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
     const data = JSON.parse(event.target.value);
-    setCustomNameInput(data.label);
+    setInputNameFromList(data.label);
   }, []);
 
   const dynamicTableHeaders0 = useMemo(() => {
@@ -580,19 +580,30 @@ function App() {
     updateFunc(updatedRows);
   }, [firstTableRows, secondTableRows, initialTableRows]);
 
-  const [customInputName, setCustomNameInput] = useState('');
+  const [inputNameFromList, setInputNameFromList] = useState('');
 
-  const onCreateCustomRow = useCallback((prevRowLabel: string) => {
-    const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
-    const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
-    if (prevRow) {
-      const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: customInputName, canAddRow: false };
-      const updatedRows = [...secondTableRows];
-      insertAt(updatedRows, targetIndex + 1, newRow);
-      setSecondTableRows(updatedRows);
-      setCustomNameInput('');
+  const onCreateCustomRow = useCallback((prevRowLabel: string, defaultValue: string) => {
+    const label = !inputNameFromList ? defaultValue : inputNameFromList;
+    if (firstTableRows.find(row => row.label === prevRowLabel)) {
+      const prevRow = firstTableRows.find(el => el.label === prevRowLabel);
+      const targetIndex = firstTableRows.findIndex(el => el.label === prevRowLabel);
+      if (prevRow) {
+        const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: label, canAddRow: false };
+        const updatedRows = [...firstTableRows];
+        insertAt(updatedRows, targetIndex + 1, newRow);
+        setFirstTableRows(updatedRows);
+      }
+    } else {
+      const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
+      const targetIndex = secondTableRows.findIndex(el => el.label === prevRowLabel);
+      if (prevRow) {
+        const newRow: RowType = { ...prevRow, id: Date.now().toString(), label: label, canAddRow: false };
+        const updatedRows = [...secondTableRows];
+        insertAt(updatedRows, targetIndex + 1, newRow);
+        setSecondTableRows(updatedRows);
+      }
     }
-  }, [secondTableRows, customInputName]);
+  }, [inputNameFromList, firstTableRows, secondTableRows]);
 
   const onCreateChocRow = useCallback((prevRowLabel: string) => {
     const prevRow = secondTableRows.find(el => el.label === prevRowLabel);
@@ -602,7 +613,6 @@ function App() {
       const updatedRows = [...secondTableRows];
       insertAt(updatedRows, targetIndex + 1, newRow);
       setSecondTableRows(updatedRows);
-      setCustomNameInput('');
     }
     setChocCustomLabel('');
   }, [secondTableRows, chocCustomLabel]);
@@ -615,7 +625,6 @@ function App() {
       const updatedRows = [...secondTableRows];
       insertAt(updatedRows, targetIndex + 1, newRow);
       setSecondTableRows(updatedRows);
-      setCustomNameInput('');
     }
     setPhenomenonCustomLabel('');
   }, [secondTableRows, phenomenonCustomLabel]);
@@ -628,7 +637,6 @@ function App() {
       const updatedRows = [...secondTableRows];
       insertAt(updatedRows, targetIndex + 1, newRow);
       setSecondTableRows(updatedRows);
-      setCustomNameInput('');
     }
     setPrimaryContentCustomLabel('');
   }, [secondTableRows, primaryContentCustomLabel]);
@@ -641,13 +649,9 @@ function App() {
       const updatedRows = [...secondTableRows];
       insertAt(updatedRows, targetIndex + 1, newRow);
       setSecondTableRows(updatedRows);
-      setCustomNameInput('');
     }
     setSecondaryContentCustomLabel('');
   }, [secondTableRows, secondaryContentCustomLabel]);
-
-
-
 
   const getExtraRowButton = useCallback((row: RowType) => {
     let extraRowBtn;
@@ -668,6 +672,7 @@ function App() {
         case 'Clob': targetCustomFields = possibleExtraFields_Clob; break;
         default: targetCustomFields = []; console.log('ERROR ASSIGNING EXTRA FIELDS FOR THIS LABEL:', row.label); break;
       };
+      const defVal = targetCustomFields[0].label;
       extraRowBtn = (
         <tr>
           <td>
@@ -676,8 +681,8 @@ function App() {
                 {getOptions(targetCustomFields, shouldSort)}
               </select>
             </div>
-            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomRow(row.label)}>
-              Aggiungi Riga Custom <i className="pl-2 fa-solid fa-plus"></i>
+            <Button key={row.label + Date.now()} className="extra-row-btn" size="sm" variant="primary" onClick={() => onCreateCustomRow(row.label, defVal)}>
+              Aggiungi Riga da lista <i className="pl-2 fa-solid fa-plus"></i>
             </Button>
           </td>
         </tr>
